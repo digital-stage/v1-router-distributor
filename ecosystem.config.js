@@ -1,6 +1,6 @@
 module.exports = {
     apps: [{
-        name: "server",
+        name: "router-distributor",
         script: "dist/index.js",
 
         // Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/
@@ -17,13 +17,16 @@ module.exports = {
     deploy: {
         production: {
             user: 'node',
-            host: 'api.digital-stage.org',
+            host: 'routers.digital-stage.org',
             ref: 'origin/master',
             repo: "https://github.com/digital-stage/server.git",
             path: '/node/server',
             env: {
                 "EMAIL": "test@digital-stage.org",
                 "PASSWORD": "testtesttest",
+                "AUTH_URL": "https://auth.digital-stage.org",
+                "MONGO_URL": "mongodb://10.114.0.4:27017",
+                "PORT": 3000,
                 "NODE_ENV": "production",
                 "ENV_PATH": "/home/node/.env",
             },
