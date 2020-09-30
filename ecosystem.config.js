@@ -19,8 +19,8 @@ module.exports = {
             user: 'node',
             host: 'routers.digital-stage.org',
             ref: 'origin/master',
-            repo: "https://github.com/digital-stage/server.git",
-            path: '/node/server',
+            repo: "https://github.com/digital-stage/router-distributor.git",
+            path: '/node/router-distributor',
             env: {
                 "EMAIL": "test@digital-stage.org",
                 "PASSWORD": "testtesttest",

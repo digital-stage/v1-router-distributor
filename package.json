@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/digital-stage/server.git"
+    "url": "git+https://github.com/digital-stage/router-distributor.git"
   },
   "keywords": [
     "video",
@@ -24,9 +24,9 @@
   "author": "Tobias Hegemann <tobias.hegemann@googlemail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/digital-stage/server/issues"
+    "url": "https://github.com/digital-stage/router-distributor/issues"
   },
-  "homepage": "https://github.com/digital-stage/server#readme",
+  "homepage": "https://github.com/digital-stage/router-distributor#readme",
   "devDependencies": {
     "@types/cors": "^2.8.7",
     "@types/mongodb": "^3.5.27",
