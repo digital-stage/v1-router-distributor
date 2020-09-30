@@ -31,7 +31,7 @@ module.exports = {
                 "PORT": 3000,
                 "NODE_ENV": "production"
             },
-            'post-deploy': 'npm install && npm run build && pm2 restart ecosystem.config.js --env production'
+            'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --env production'
         }
     }
 };
