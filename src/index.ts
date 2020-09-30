@@ -1,19 +1,27 @@
 import * as MongoClient from "mongodb";
 import * as socketIO from "socket.io";
-import * as http from "http";
 import {authorizeSocket} from "./util";
 import * as pino from "pino";
 import {Router} from "./model/model.common";
+import * as express from "express";
+import * as cors from "cors";
 
 const logger = pino({
     level: process.env.LOG_LEVEL || 'info'
 });
 
-const server = http.createServer();
-const io = new socketIO(server);
 
 const DATABASE: string = "digitalstage";
 const COLLECTION: string = "routers";
+
+const app = express();
+app.use(express.urlencoded({extended: true}));
+app.use(cors({origin: true}));
+app.options('*', cors());
+
+const server = app.listen(process.env.PORT);
+
+const io = new socketIO(server);
 
 const startServer = async () => {
     const mongo = await MongoClient.connect(process.env.MONGO_URL, {
@@ -23,6 +31,18 @@ const startServer = async () => {
 
     // First delete all routers
     await db.collection(COLLECTION).deleteMany({});
+
+    app.get('/beat', function (req, res) {
+        res.send('Boom!');
+    });
+
+    // GET ALL AVAILABLE ROUTERS
+    app.get('/routers', function (req, res) {
+        return db.collection(COLLECTION).find({}).toArray()
+            .then(routers => {
+                res.status(200).json(routers)
+            });
+    });
 
     io.on('connection', socket => {
         return authorizeSocket(socket)
@@ -99,7 +119,6 @@ const startServer = async () => {
                 logger.warn(error);
             });
     });
-    server.listen(process.env.PORT);
-    logger.info("Listening on port " + process.env.PORT);
 }
-startServer();
+startServer()
+    .then(() => logger.info("Listening on port " + process.env.PORT))
