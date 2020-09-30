@@ -1,10 +1,5 @@
 import * as socketIO from "socket.io";
 import fetch from "node-fetch";
-import * as pino from "pino";
-
-const logger = pino({
-    level: process.env.LOG_LEVEL || 'info'
-});
 
 export interface User {
     _id: string;

@@ -1,7 +1,6 @@
 export type StageId = string;
 export type GroupId = string;
 export type UserId = string;
-export type GroupMemberId = string;
 export type StageMemberId = string;
 export type DeviceId = string;
 export type RouterId = string;
@@ -49,8 +48,6 @@ export interface User {
 
     stageId?: string;
     stageMemberId?: string;
-
-    //stageMembers: StageMemberId[];
 }
 
 export interface Producer {
