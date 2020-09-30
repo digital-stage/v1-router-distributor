@@ -1,6 +1,6 @@
 module.exports = {
     apps: [{
-        name: "router-distributor",
+        name: "distributor",
         script: "dist/index.js",
 
         // Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/
@@ -22,7 +22,7 @@ module.exports = {
             host: 'routers.digital-stage.org',
             ref: 'origin/master',
             repo: "https://github.com/digital-stage/router-distributor.git",
-            path: '/node/router-distributor',
+            path: '/node/distributor',
             env: {
                 "EMAIL": "test@digital-stage.org",
                 "PASSWORD": "testtesttest",
