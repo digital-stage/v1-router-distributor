@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "tsc && node ./dist/index.js",
     "deploy-production": "pm2 deploy ecosystem.config.js production --env production --force",
-    "reload-production": "pm2 deploy ecosystem.config.js production --env production exec 'pm2 reload server'"
+    "reload-production": "pm2 deploy ecosystem.config.js production --env production exec 'pm2 reload router-distributor'"
   },
   "repository": {
     "type": "git",
