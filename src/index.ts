@@ -2,9 +2,9 @@ import * as MongoClient from "mongodb";
 import * as socketIO from "socket.io";
 import {authorizeSocket} from "./util";
 import * as pino from "pino";
-import {Router} from "./model/model.common";
 import * as express from "express";
 import * as cors from "cors";
+import {Router} from "./model/model.server";
 
 const logger = pino({
     level: process.env.LOG_LEVEL || 'info'
@@ -48,7 +48,7 @@ const startServer = async () => {
         return authorizeSocket(socket)
             .then(user => {
                 let router: Router = undefined;
-                const createRouter = async (initialRouter: Partial<Router>) => {
+                const createRouter = async (initialRouter: Omit<Router, "_id">) => {
                     if (!initialRouter.url || !initialRouter.port) {
                         throw new Error("Invalid request");
                     }
@@ -66,8 +66,12 @@ const startServer = async () => {
                         };
                         logger.info("Updated existing router");
                     } else {
-                        router = await db.collection(COLLECTION).insertOne({
-                            ...initialRouter,
+                        router = await db.collection<Router>(COLLECTION).insertOne({
+                            url: initialRouter.url,
+                            ipv4: initialRouter.ipv4,
+                            ipv6: initialRouter.ipv6,
+                            port: initialRouter.port,
+                            availableSlots: initialRouter.availableSlots,
                             userId: user._id
                         })
                             .then(result => {
