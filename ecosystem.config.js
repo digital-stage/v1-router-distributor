@@ -24,8 +24,6 @@ module.exports = {
             repo: "https://github.com/digital-stage/router-distributor.git",
             path: '/node/distributor',
             env: {
-                "EMAIL": "test@digital-stage.org",
-                "PASSWORD": "testtesttest",
                 "AUTH_URL": "https://auth.digital-stage.org",
                 "MONGO_URL": "mongodb://10.114.0.4:27017",
                 "PORT": 3000,
