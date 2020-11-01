@@ -68,9 +68,10 @@ const startServer = async () => {
                     } else {
                         router = await db.collection<Router>(COLLECTION).insertOne({
                             url: initialRouter.url,
+                            port: initialRouter.port,
+                            path: initialRouter.path,
                             ipv4: initialRouter.ipv4,
                             ipv6: initialRouter.ipv6,
-                            port: initialRouter.port,
                             availableSlots: initialRouter.availableSlots,
                             userId: user._id
                         })
