@@ -1,4 +1,3 @@
-import * as socketIO from 'socket.io';
 import fetch from 'node-fetch';
 
 export interface User {
@@ -20,11 +19,4 @@ export function getUserByToken(token: string): Promise<User> {
       }
       return response.json();
     });
-}
-
-export function authorizeSocket(socket: socketIO.Socket): Promise<User> {
-  if (!socket.handshake.query || !socket.handshake.query.token) {
-    throw new Error('Missing authorization');
-  }
-  return this.getUserByToken(socket.handshake.query.token);
 }
