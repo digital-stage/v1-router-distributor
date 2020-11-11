@@ -8,12 +8,6 @@ module.exports = {
         autorestart: true,
         watch: true,
         max_memory_restart: '300M',
-        env: {
-            "NODE_ENV": 'development'
-        },
-        env_production: {
-            "NODE_ENV": "production"
-        },
     }],
 
     deploy: {
@@ -26,6 +20,8 @@ module.exports = {
             env: {
                 "AUTH_URL": "https://auth.digital-stage.org",
                 "MONGO_URL": "mongodb://10.114.0.4:27017",
+                "MONGO_DB": "digitalstage",
+                "MONGO_COLLECTION": "routers",
                 "PORT": 3000,
                 "NODE_ENV": "production"
             },

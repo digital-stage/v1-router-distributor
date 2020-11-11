@@ -4,12 +4,11 @@
   "description": "Router distribution for the digital-stage.org platform",
   "main": "index.js",
   "scripts": {
-    "dev": "LOG_LEVEL=trace PORT=5000 MONGO_URL=mongodb://127.0.0.1:4321 AUTH_URL=https://auth.digital-stage.org nodemon --watch './src/**/*.ts' --exec 'ts-node' src/index.ts | pino-colada",
+    "dev": "nodemon --watch './src/**/*.ts' --exec 'ts-node' src/index.ts | pino-colada",
     "lint": "npx eslint ./src --ext .js,.ts",
     "build": "tsc",
     "start": "tsc && node ./dist/index.js",
-    "deploy-production": "pm2 deploy ecosystem.config.js production --env production --force",
-    "reload-production": "pm2 deploy ecosystem.config.js production --env production exec 'pm2 reload router-distributor'"
+    "deploy": "pm2 deploy ecosystem.config.js production --force"
   },
   "repository": {
     "type": "git",
@@ -38,6 +37,7 @@
     "eslint-plugin-import": "^2.22.1",
     "nodemon": "^2.0.6",
     "pino-colada": "^2.1.0",
+    "pm2": "^4.5.0",
     "process": "^0.11.10",
     "ts-node": "^9.0.0",
     "tslint": "^6.1.3",

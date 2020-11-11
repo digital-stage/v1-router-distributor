@@ -4,15 +4,15 @@ import { UWSProvider } from 'teckos';
 import * as uWS from 'uWebSockets.js';
 import { getUserByToken } from './util';
 import { Router } from './model/model.server';
+import {config} from "dotenv";
+
+config();
 
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
 });
 
-const { PORT } = process.env;
-
-const DATABASE: string = 'digitalstage';
-const COLLECTION: string = 'routers';
+const { PORT, MONGO_DB, MONGO_COLLECTION } = process.env;
 
 const uws = uWS.App();
 const io = new UWSProvider(uws);
@@ -20,23 +20,32 @@ const io = new UWSProvider(uws);
 const startServer = async () => {
   const mongo = await MongoClient.connect(process.env.MONGO_URL, {
   });
-  const db = mongo.db(DATABASE);
+  const db = mongo.db(MONGO_DB);
 
   // First delete all routers
-  await db.collection(COLLECTION).deleteMany({});
+  await db.collection(MONGO_COLLECTION).deleteMany({});
+
 
   uws.get('/beat', (res) => {
     res.end('Boom!');
   });
 
   // GET ALL AVAILABLE ROUTERS
+  uws.options('/routers', (res) => {
+    res
+      .writeHeader("Access-Control-Allow-Origin", "*")
+      .writeHeader("Access-Control-Allow-Methods", "GET")
+      .end();
+  })
   uws.get('/routers', async (res) => {
     res.onAborted(() => {
       res.aborted = true;
     });
-    const routers = await db.collection(COLLECTION).find({}).toArray();
+    const routers = await db.collection(MONGO_COLLECTION).find({}).toArray();
     if (!res.aborted) {
-      res.end(JSON.stringify(routers));
+      res
+        .writeHeader("Access-Control-Allow-Origin", "*")
+        .end(JSON.stringify(routers));
     }
   });
 
@@ -52,20 +61,20 @@ const startServer = async () => {
             throw new Error('Invalid request');
           }
 
-          router = await db.collection(COLLECTION).findOne({ url: initialRouter.url });
+          router = await db.collection(MONGO_COLLECTION).findOne({ url: initialRouter.url });
           if (router) {
             if (router.userId !== user._id) {
               throw new Error('Not allowed');
             }
             // Update router
-            await db.collection(COLLECTION).updateOne({ _id: router._id }, initialRouter);
+            await db.collection(MONGO_COLLECTION).updateOne({ _id: router._id }, initialRouter);
             router = {
               ...router,
               ...initialRouter,
             };
             logger.info('Updated existing router');
           } else {
-            router = await db.collection<Router>(COLLECTION).insertOne({
+            router = await db.collection<Router>(MONGO_COLLECTION).insertOne({
               url: initialRouter.url,
               port: initialRouter.port,
               ipv4: initialRouter.ipv4,
@@ -95,7 +104,7 @@ const startServer = async () => {
 
         socket.on('update-router', (update: Partial<Router>) => {
           if ((router && !update._id) || (update._id === router._id)) {
-            db.collection(COLLECTION).findOneAndUpdate({ _id: router._id }, {
+            db.collection(MONGO_COLLECTION).findOneAndUpdate({ _id: router._id }, {
               ...update,
               url: router.url,
               userId: user._id,
@@ -106,7 +115,7 @@ const startServer = async () => {
         socket.on('disconnect', () => {
           logger.info('Disconnected, remove router');
           if (router) {
-            db.collection(COLLECTION).deleteOne({ _id: router._id })
+            db.collection(MONGO_COLLECTION).deleteOne({ _id: router._id })
               .then(() => {
                 io.toAll('router-removed', router);
               });
@@ -120,7 +129,7 @@ const startServer = async () => {
         return createRouter(payload.router);
       })
       .catch((error) => {
-        console.error(error);
+        logger.error(error);
         socket.disconnect();
       }));
   });
