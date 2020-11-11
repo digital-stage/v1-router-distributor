@@ -18,8 +18,7 @@ const uws = uWS.App();
 const io = new UWSProvider(uws);
 
 const startServer = async () => {
-  const mongo = await MongoClient.connect(process.env.MONGO_URL, {
-  });
+  const mongo = await MongoClient.connect(process.env.MONGO_URL, {});
   const db = mongo.db(MONGO_DB);
 
   // First delete all routers
@@ -54,6 +53,7 @@ const startServer = async () => {
       router: Omit<Router, '_id'>;
     }) => getUserByToken(payload.token)
       .then((user) => {
+        logger.info('New router is asking for permission');
         let router: Router;
         const createRouter = async (initialRouter: Omit<Router, '_id'>) => {
           if (!initialRouter.url || !initialRouter.port) {
