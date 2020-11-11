@@ -2,9 +2,9 @@ import * as MongoClient from 'mongodb';
 import * as pino from 'pino';
 import { UWSProvider } from 'teckos';
 import * as uWS from 'uWebSockets.js';
+import { config } from 'dotenv';
 import { getUserByToken } from './util';
 import { Router } from './model/model.server';
-import {config} from "dotenv";
 
 config();
 
@@ -25,7 +25,6 @@ const startServer = async () => {
   // First delete all routers
   await db.collection(MONGO_COLLECTION).deleteMany({});
 
-
   uws.get('/beat', (res) => {
     res.end('Boom!');
   });
@@ -33,10 +32,10 @@ const startServer = async () => {
   // GET ALL AVAILABLE ROUTERS
   uws.options('/routers', (res) => {
     res
-      .writeHeader("Access-Control-Allow-Origin", "*")
-      .writeHeader("Access-Control-Allow-Methods", "GET")
+      .writeHeader('Access-Control-Allow-Origin', '*')
+      .writeHeader('Access-Control-Allow-Methods', 'GET')
       .end();
-  })
+  });
   uws.get('/routers', async (res) => {
     res.onAborted(() => {
       res.aborted = true;
@@ -44,7 +43,7 @@ const startServer = async () => {
     const routers = await db.collection(MONGO_COLLECTION).find({}).toArray();
     if (!res.aborted) {
       res
-        .writeHeader("Access-Control-Allow-Origin", "*")
+        .writeHeader('Access-Control-Allow-Origin', '*')
         .end(JSON.stringify(routers));
     }
   });
@@ -99,7 +98,7 @@ const startServer = async () => {
             logger.info('Created new router');
           }
           io.toAll('router-added', router);
-          socket.emit('ready', router);
+          socket.emit('router-ready', router);
         };
 
         socket.on('update-router', (update: Partial<Router>) => {
