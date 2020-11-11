@@ -1,6 +1,8 @@
 FROM node:12.19.0-alpine AS build
 
 ENV MONGO_URL=mongodb://mongo:27017
+ENV MONGO_DB=digitalstage
+ENV MONGO_COLLECTION=routers
 ENV AUTH_URL=http://digital-auth:5000
 ENV PORT=4020
 
