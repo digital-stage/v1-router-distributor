@@ -74,7 +74,10 @@ const startServer = async () => {
             logger.info('Updated existing router');
           } else {
             router = await db.collection<Router>(MONGO_COLLECTION).insertOne({
+              wsPrefix: initialRouter.wsPrefix,
+              restPrefix: initialRouter.restPrefix,
               url: initialRouter.url,
+              path: initialRouter.path,
               port: initialRouter.port,
               ipv4: initialRouter.ipv4,
               ipv6: initialRouter.ipv6,

@@ -26,7 +26,10 @@ export type CustomStageMemberOvTrackId = string | ObjectId;
 
 export interface Router {
   _id: RouterId;
+  wsPrefix: string;
+  restPrefix: string;
   url: string;
+  path: string;
   port: number;
   ipv4: string;
   ipv6: string;
