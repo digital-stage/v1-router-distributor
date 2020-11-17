@@ -1,7 +1,7 @@
 import * as MongoClient from 'mongodb';
 import * as pino from 'pino';
 import { UWSProvider } from 'teckos';
-import * as uWS from 'uWebSockets.js';
+import * as uWS from 'teckos/uws';
 import { config } from 'dotenv';
 import { getUserByToken } from './util';
 import { Router } from './model/model.server';
